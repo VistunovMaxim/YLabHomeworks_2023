@@ -1,0 +1,11 @@
+target/
+.idea
+
+.idea/
+FFDC/
+test-output/
+old/
+log/
+.DS_Store
+*.iml
+*.log

@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -24,4 +25,18 @@ public class Validator {
             ex.printStackTrace();
             return false;
         }
-    } }
+    }
+
+    public int checkCountOfNums() {
+        int count = 0;
+        try (Scanner scanner = new Scanner(new FileInputStream(file))) {
+            while (scanner.hasNextLong()) {
+                long current = scanner.nextLong();
+                count++;
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return count;
+    }
+}

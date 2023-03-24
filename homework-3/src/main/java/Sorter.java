@@ -1,3 +1,4 @@
+import javax.crypto.spec.PSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,9 +15,8 @@ public class Sorter {
         int countOfBuckets = Sorter.findBestCountOfBuckets(dataFile);
         List<File> list = Sorter.makeListOfSortedBuckets(dataFile, countOfBuckets, countOfNums);
         if (countOfBuckets != 1) {
-            Sorter.mergeBuckets(list.get(0), list.get(1));
             while (list.size() != 1) {
-                Sorter.mergeBuckets(list.get(0), list.get(1));
+                Sorter.mergeBuckets(list.get(0), list.get(1), list.size());
                 list.get(1).delete();
                 list.remove(1);
             }
@@ -52,6 +52,9 @@ public class Sorter {
                     for (int j = 0; j < listForSort.size(); j++) {
                         pw.println(listForSort.get(j));
                     }
+                    if (countOfBuckets > 1) {
+                        pw.println(Long.MAX_VALUE);
+                    }
                     listForSort.clear();
                     pw.flush();
                 }
@@ -61,14 +64,15 @@ public class Sorter {
         return listOfBuckets;
     }
 
-    public static void mergeBuckets(File file1, File file2) {
-        File mergedFiles = new File("mergedFiles.txt");
+    public static void mergeBuckets(File file1, File file2, int lastIndex) {
+        File mergedFiles = new File("mergedFile.txt");
         try (Scanner scanner1 = new Scanner(new FileInputStream(file1));
              Scanner scanner2 = new Scanner(new FileInputStream(file2));
              PrintWriter pw = new PrintWriter(mergedFiles)) {
             long x = scanner1.nextLong();
             long y = scanner2.nextLong();
-            while (scanner1.hasNext() && scanner2.hasNext()) {
+
+            while (scanner1.hasNextLong() && scanner2.hasNextLong()) {
                 if (x > y) {
                     pw.println(y);
                     y = scanner2.nextLong();
@@ -77,14 +81,16 @@ public class Sorter {
                     x = scanner1.nextLong();
                 }
             }
-            if (!scanner1.hasNextLong()) {
-                while (scanner2.hasNext()) {
-                    pw.println(scanner2.nextLong());
+
+            if (scanner1.hasNextLong()) {
+                while (scanner1.hasNextLong()) {
+                    pw.println(x);
+                    x = scanner1.nextLong();
                 }
-            }
-            if (!scanner2.hasNextLong()) {
-                while (scanner1.hasNext()) {
-                    pw.println(scanner1.nextLong());
+            } else if (scanner2.hasNextLong()) {
+                while (scanner2.hasNextLong()) {
+                    pw.println(y);
+                    y = scanner2.nextLong();
                 }
             }
         } catch (FileNotFoundException e) {
@@ -95,6 +101,9 @@ public class Sorter {
              PrintWriter pw = new PrintWriter(file1)) {
             while (scanner3.hasNext()) {
                 pw.println(scanner3.nextLong());
+            }
+            if (lastIndex != 2) {
+                pw.println(Long.MAX_VALUE);
             }
             mergedFiles.delete();
         } catch (FileNotFoundException e) {

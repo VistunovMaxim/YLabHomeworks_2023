@@ -6,6 +6,7 @@ public class OrgStructureParserImpl implements OrgStructureParser {
     @Override
     public Employee parseStructure(File csvFile) throws IOException {
 
+        int count = 0;
         int bossId = 0;
         String line;
         String[] subString;
@@ -20,15 +21,16 @@ public class OrgStructureParserImpl implements OrgStructureParser {
                     subString = line.split(";");
                     Employee employee = new Employee();
 
-                    employee.setId(Long.parseLong(subString[0]));
-                    employee.setName(subString[2]);
-                    employee.setPosition(subString[3]);
                     if (subString[1].equals("")) {
-                        bossId = Integer.parseInt(subString[0]);
+                        bossId = count;
                     } else {
                         employee.setBossId(Long.parseLong(subString[1]));
                     }
+                    employee.setId(Long.parseLong(subString[0]));
+                    employee.setName(subString[2]);
+                    employee.setPosition(subString[3]);
                     allEmployees.add(employee);
+                    count++;
                 }
             }
         }
@@ -42,6 +44,6 @@ public class OrgStructureParserImpl implements OrgStructureParser {
                 }
             }
         }
-        return allEmployees.get(bossId - 1);
+        return allEmployees.get(bossId);
     }
 }

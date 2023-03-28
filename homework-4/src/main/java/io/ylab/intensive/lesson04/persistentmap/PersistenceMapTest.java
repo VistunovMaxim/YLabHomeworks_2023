@@ -96,20 +96,3 @@ public class PersistenceMapTest {
         return dataSource;
     }
 }
-
-//persistentMap.init("One");
-//    persistentMap.put("1", "First");
-//    persistentMap.put("2", "Second");
-//    persistentMap.put("3", "Third");
-//    persistentMap.put("4", "Forth");
-//    persistentMap.init("Two");
-//    persistentMap.put("2", "Second");
-//    persistentMap.init("One");
-//    persistentMap.put("1", "FirstNew");
-//    persistentMap.clear();
-//    List list = persistentMap.getKeys();
-//    System.out.println(persistentMap.containsKey("2"));
-//    System.out.println(persistentMap.containsKey("6"));
-//    for (Object str : list) {
-//      System.out.println(str);
-//    }
